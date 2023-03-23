@@ -6,20 +6,28 @@ defmodule Traefik.Handler do
 		|> format_response()
 	end
 
-	def parse(_request) do
-		_conn = %{method: "GET", path: "/developers", response: ""}
+	def parse(request) do
+		[method, path, _] =
+		request
+		|> String.split("\n")
+		|> List.first()
+		|> String.split(" ")
+
+		%{method: method, path: path, response: ""}
 	end
 
-	def route(_conn)do
-		_conn = %{method: "GET", path: "/developers", response: "Hello Devs"}
+	def route(conn)do
+		 %{conn | response: "Hello 😛"}
 	end
 
-	def format_response(_conn) do
+	def format_response(conn) do
 		"""
 		    HTTP/1.1 200 OK
 		    Content-Type: text/html
-		    Content-Lenght: 41
+		    Content-Lenght: #{String.length(conn.response)}
 		    @neodevelop, @makingdevs, @elixirlang
+		#{conn.response}
+
 		"""
 	end
 end
