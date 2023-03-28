@@ -20,11 +20,11 @@ defmodule Traefik.Handler do
     route(conn, conn.method, conn.path)
   end
 
-  def route(conn, "GET", "/request1🤖") do
+  def route(conn, "GET", "/developers") do
     %{conn | response: "Hello 🤖"}
   end
 
-  def route(conn, "GET", "/request2🌹") do
+  def route(conn, "GET", "/projects") do
     %{conn | response: "Hola 🌹"}
   end
 
@@ -40,7 +40,7 @@ defmodule Traefik.Handler do
 end
 
 request = """
-GET /request1🤖 HTTP/1.1
+GET /developers HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
@@ -51,7 +51,7 @@ response = Traefik.Handler.handle(request)
 IO.puts(response)
 
 request = """
-GET /request2🌹 HTTP/1.1
+GET /projects HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
@@ -60,3 +60,24 @@ Accept: */*
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
+
+
+response = """
+GET /developers/1 HTTP/1.1
+Host: makingdevs.com
+User-Agent MyBrowser/0.1
+Accept: */*
+"""
+
+response = Traefik.Handler.handle(request)
+IO.puts(response)
+
+request = """
+GET /bugme HTTP/1.1
+Host: makingdevs.com
+User-Agent: MyBrowser/0.1
+Accept: */*
+"""
+
+response = Traefik.Handler.handle(request)
+IO.puts(response) 
