@@ -22,20 +22,42 @@ defmodule Traefik.Handler do
 
   def route(conn, "GET", "/developers") do
     %{conn | response: "Hello 🤖"}
+    %{conn | status: 200, response: "Hello 🤖"}
+  end
+
+  def route(conn, "GET", "/developers/" <> id) do
+  	%{conn | status: 200, response: "Hello developer #{id}"}
   end
 
   def route(conn, "GET", "/projects") do
     %{conn | response: "Hola 🌹"}
+     %{conn | status: 200, response: "Hola 🌹"}
+  end
+
+  def route(conn, _, path) do
+  	%{conn | status: 404, response: "No '#{path}' found"}
   end
 
   def format_response(conn) do
     """
-    HTTP/1.1 200 OK
+    HTTP/1.1 #{conn.status} #{code_status(conn.status)}
     Content-Type: text/html
     Content-Lenght: #{String.length(conn.response)}
 
     #{conn.response}
     """
+  end
+
+  defp code_status(code) do
+    %{
+      200 => "OK",
+      201 => "Created",
+      401 => "Unathorized",
+      403 => "Forbidden",
+      404 => "Not found",
+      500 => "Internal Server Error"
+    }
+    |> Map.get(code, "Not found")
   end
 end
 
@@ -44,7 +66,6 @@ GET /developers HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
-
 """
 
 response = Traefik.Handler.handle(request)
@@ -55,17 +76,15 @@ GET /projects HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
-
 """
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
 
-
-response = """
+request = """
 GET /developers/1 HTTP/1.1
 Host: makingdevs.com
-User-Agent MyBrowser/0.1
+User-Agent: MyBrowser/0.1
 Accept: */*
 """
 
@@ -80,4 +99,4 @@ Accept: */*
 """
 
 response = Traefik.Handler.handle(request)
-IO.puts(response) 
+IO.puts(response)
