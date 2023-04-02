@@ -5,6 +5,9 @@ defmodule Traefik.Handler do
 
   @pages_path Path.expand("../../pages", __DIR__)
 
+  import Traefik.Parser, only: [parse: 1]
+  import Traefik.Plugs, only: [rewrite_path: 1, track: 1, log: 1]
+
   @doc "Transforms the request into a response when it's used."
   def handle(request) do
     request
@@ -16,31 +19,6 @@ defmodule Traefik.Handler do
     |> format_response()
   end
 
-  def parse(request) do
-    [method, path, _] =
-      request
-      |> String.split("\n")
-      |> List.first()
-      |> String.split(" ")
-
-    %{method: method, path: path, response: "", status: nil}
-  end
-
-  def rewrite_path(%{path: "/internal-projects👻"} = conn) do
-    %{conn | path: "/secret-projects👻"}
-  end
-
-  def rewrite_path(conn), do: conn
-
-  def log(conn), do: IO.inspect(conn, label: "LOG")
-
-
-  def track(%{status: 404, path: path} = conn) do
-    IO.puts("Warn 💀 #{path} not found!")
-    conn
-  end
-
-  def track(conn), do: conn
 
   def route(conn) do
     route(conn, conn.method, conn.path)
