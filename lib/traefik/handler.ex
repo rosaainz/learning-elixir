@@ -55,25 +55,45 @@ defmodule Traefik.Handler do
     %{conn | status: 200, response: "Traefik 🦇"}
   end
 
-def route(conn, "GET", "/about📂") do
-  	file_path =
-  		Path.expand("../../pages", __DIR__)
-  		|> Path.join("about.html")
 
-  	case File.read(file_path) do
-  		{:ok, content} ->
-  			%{conn | status: 200, response: content}
-
-  		{:error, :enoent} ->
-  			%{conn | status: 400, response: "File not found 📂!!!"}
-
-  		{:error, reason} ->
-  			%{conn | status: 500, response: "File error #{reason} 📂"}
-  	end
+ def route(conn, "GET", "/about📂") do
+    Path.expand("../../pages", __DIR__)
+    |> Path.join("about.html")
+    |> File.read()
+    |> handle_file(conn)
   end
+
+  # def route(conn, "GET", "/about") do
+  #   file_path =
+  #     Path.expand("../../pages", __DIR__)
+  #     |> Path.join("about.html")
+
+  #   case File.read(file_path) do
+  #     {:ok, content} ->
+  #       %{conn | status: 200, response: content}
+
+  #     {:error, :enoent} ->
+  #       %{conn | status: 404, response: "File not found!!!"}
+
+  #     {:error, reason} ->
+  #       %{conn | status: 500, response: "File error: #{reason}"}
+  #   end
+  # end
 
   def route(conn, _, path) do
     %{conn | status: 404, response: "No '#{path}' found"}
+  end
+
+  def handle_file({:ok, content}, conn) do
+    %{conn | status: 200, response: content}
+  end
+
+  def handle_file({:error, :enoent}, conn) do
+    %{conn | status: 404, response: "File not found!!!"}
+  end
+
+  def handle_file({:error, reason}, conn) do
+    %{conn | status: 500, response: "File error: #{reason}"}
   end
 
   def format_response(conn) do
