@@ -5,6 +5,7 @@ defmodule Traefik.Handler do
     |> rewrite_path()
     |> log()
     |> route()
+    |> track()
     |> format_response()
   end
 
@@ -18,11 +19,22 @@ defmodule Traefik.Handler do
     %{method: method, path: path, response: "", status: nil}
   end
 
-  def rewrite_path(%{path: "/internal-projects"} = conn) do
-  	%{conn | path: "/secret-projects"}
+  def rewrite_path(%{path: "/internal-projects👻"} = conn) do
+    %{conn | path: "/secret-projects👻"}
   end
 
-  def rewrite_path(conn), do: conn
+  def rewrite_path(conn) do
+    conn
+  end
+
+  def track(%{status: 404, path: path} = conn) do
+    IO.puts("Warn 💀 #{path} not found!")
+    conn
+  end
+
+  def track(conn) do
+    conn
+  end
 
   def log(conn), do: IO.inspect(conn, label: "LOG")
 
@@ -30,26 +42,24 @@ defmodule Traefik.Handler do
     route(conn, conn.method, conn.path)
   end
 
-  def route(conn, "GET", "/secret-projects") do
-  	%{conn | status: 200, response: "Trainig for OTP,LiveView, Nx"}
+  def route(conn, "GET", "/secret-projects👻") do
+    %{conn | status: 200, response: "Training for OTP, LiveView, Nx👻"}
   end
 
-  def route(conn, "GET", "/developers") do
-    %{conn | response: "Hello 🤖"}
-    %{conn | status: 200, response: "Hello 🤖"}
+  def route(conn, "GET", "/developers🦋") do
+    %{conn | status: 200, response: "Holaa 🦋"}
   end
 
   def route(conn, "GET", "/developers/" <> id) do
-  	%{conn | status: 200, response: "Hello developer #{id}"}
+    %{conn | status: 200, response: "Hello developer (con id) #{id}"}
   end
 
-  def route(conn, "GET", "/projects") do
-    %{conn | response: "Hola 🌹"}
-     %{conn | status: 200, response: "Hola 🌹"}
+  def route(conn, "GET", "/projects🦇") do
+    %{conn | status: 200, response: "Traefik 🦇"}
   end
 
   def route(conn, _, path) do
-  	%{conn | status: 404, response: "No '#{path}' found"}
+    %{conn | status: 404, response: "No '#{path}' found"}
   end
 
   def format_response(conn) do
@@ -57,6 +67,7 @@ defmodule Traefik.Handler do
     HTTP/1.1 #{conn.status} #{code_status(conn.status)}
     Content-Type: text/html
     Content-Lenght: #{String.length(conn.response)}
+
 
     #{conn.response}
     """
@@ -76,50 +87,56 @@ defmodule Traefik.Handler do
 end
 
 request = """
-GET /developers HTTP/1.1
+GET /developers🦋 HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
+
 """
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
 
 request = """
-GET /projects HTTP/1.1
+GET /projects🦇 HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
+
 """
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
 
 request = """
-GET /developers/1 HTTP/1.1
+GET /developers/1🐰 HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
+
+"""
+
+response = Traefik.Handler.handle(request)
+IO.puts(response)
+
+
+request = """
+GET /bugme🪲 HTTP/1.1
+Host: makingdevs.com
+User-Agent: MyBrowser/0.1
+Accept: */*
+
 """
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
 
 request = """
-GET /bugme HTTP/1.1
+GET /internal-projects👻 HTTP/1.1
 Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
-"""
 
-response = Traefik.Handler.handle(request)
-IO.puts(response)
-
-request = """
-GET /internal-projects HTTP/1.1
-Host: makingdevs.com
-User-Agent: MyBrowser/0.1
-Accept: */*
 """
 
 response = Traefik.Handler.handle(request)
