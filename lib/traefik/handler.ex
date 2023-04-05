@@ -55,7 +55,7 @@ defmodule Traefik.Handler do
  def route(%Conn{} = conn, "POST", "/developers") do
     response = """
     Created dev:
-    #{conn.params["name"]} -#{conn.params["lastname"]} - #{conn.params["nickname"]}
+    #{conn.params["name"]} - #{conn.params["lastname"]} - #{conn.params["nickname"]}
     """
 
     %Conn{conn | status: 201, response: response }
@@ -178,10 +178,11 @@ Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
 Content-Type: application/x-www-form-urlencoded
-Content-Length:
+Content-Length: 44
 
 name=Juan&lastname=Reyes&nickname=neodevelop
 """
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
+
