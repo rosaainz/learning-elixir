@@ -10,6 +10,8 @@ defmodule Traefik.Handler do
 
   alias Traefik.Conn
 
+  #Comment
+
   @doc "Transforms the request into a response when it's used."
   def handle(request) do
     request
@@ -17,7 +19,6 @@ defmodule Traefik.Handler do
     |> rewrite_path()
     |> log()
     |> route()
-    |> log()
     |> track()
     |> format_response()
   end
@@ -52,7 +53,12 @@ defmodule Traefik.Handler do
   end
 
  def route(%Conn{} = conn, "POST", "/developers") do
-    %Conn{conn | status: 201, response: "Created developer"}
+    response = """
+    Created dev:
+    #{conn.params["name"]} -#{conn.params["lastname"]} - #{conn.params["nickname"]}
+    """
+
+    %Conn{conn | status: 201, response: response }
   end
 
 
