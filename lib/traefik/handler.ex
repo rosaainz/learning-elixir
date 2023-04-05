@@ -52,8 +52,9 @@ defmodule Traefik.Handler do
   end
 
  def route(%Conn{} = conn, "POST", "/developers") do
-   %Conn{conn | status: 201, response: "Created developer"}
- end
+    %Conn{conn | status: 201, response: "Created developer"}
+  end
+
 
   # def route(conn, "GET", "/about") do
   #   file_path =
@@ -171,7 +172,7 @@ Host: makingdevs.com
 User-Agent: MyBrowser/0.1
 Accept: */*
 Content-Type: application/x-www-form-urlencoded
-Content-Lenght: 
+Content-Length:
 
 name=Juan&lastname=Reyes&nickname=neodevelop
 """
