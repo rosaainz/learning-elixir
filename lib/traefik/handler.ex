@@ -1,6 +1,6 @@
 defmodule Traefik.Handler do
-  @moduledoc """
-  Handles request in Traefik WebServer in a simple way
+   @moduledoc """
+  Handles the request in Traefik WebServer in a simple way.
   """
 
   @pages_path Path.expand("../../pages", __DIR__)
@@ -22,8 +22,7 @@ defmodule Traefik.Handler do
     |> format_response()
   end
 
-
-  def route(%Conn{} = conn) do
+   def route(%Conn{} = conn) do
     route(conn, conn.method, conn.path)
   end
 
@@ -31,26 +30,28 @@ defmodule Traefik.Handler do
     %Conn{conn | status: 200, response: "Training for OTP, LiveView, Nx👻"}
   end
 
+
   def route(%Conn{} = conn, "GET", "/developers🦋") do
     %Conn{conn | status: 200, response: "Holaa 🦋"}
   end
 
+
   def route(%Conn{} = conn, "GET", "/developers/" <> id) do
-    %Conn{conn | status: 200, response: "Hello developer (con id) #{id}"}
+    %Conn{conn | status: 200, response: "Hello developer #{id}"}
   end
 
   def route(%Conn{} = conn, "GET", "/projects🦇") do
     %Conn{conn | status: 200, response: "Traefik 🦇"}
   end
 
-
- def route(%Conn{} = conn, "GET", "/about📂") do
+   def route(%Conn{} = conn, "GET", "/about📂") do
     @pages_path
     |> Path.join("about.html")
     |> File.read()
     |> handle_file(conn)
   end
 
+ 
   # def route(conn, "GET", "/about") do
   #   file_path =
   #     Path.expand("../../pages", __DIR__)
@@ -89,8 +90,6 @@ defmodule Traefik.Handler do
     HTTP/1.1 #{Conn.full_status(conn)}
     Content-Type: text/html
     Content-Lenght: #{String.length(conn.response)}
-
-
     #{conn.response}
     """
   end

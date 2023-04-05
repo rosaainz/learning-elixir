@@ -1,7 +1,6 @@
 defmodule Traefik.Conn do
   defstruct method: "", path: "", status: nil, response: ""
 
-
   def full_status(%__MODULE__{} = conn) do
     "#{conn.status} #{code_status(conn.status)}"
   end
@@ -15,6 +14,6 @@ defmodule Traefik.Conn do
       404 => "Not found",
       500 => "Internal Server Error"
     }
-    |>Map.get(code, "Not found")
+    |> Map.get(code, "Not found")
   end
 end
