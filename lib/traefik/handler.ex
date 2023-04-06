@@ -13,7 +13,7 @@ defmodule Traefik.Handler do
   #Comment
 
   @doc "Transforms the request into a response when it's used."
-  def handle(request) do
+   def handle(request) do
     request
     |> parse()
     |> rewrite_path()

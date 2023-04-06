@@ -1,5 +1,5 @@
 defmodule Traefik.Parser do
-  def parse(request) do
+   def parse(request) do
     [top, params_string] = String.split(request, "\n\n")
 
     [request_line | headers_string] = String.split(top, "\n")
@@ -21,8 +21,7 @@ defmodule Traefik.Parser do
 
   def parse_headers([], contador), do: contador
 
-  def parse_headers(headers_string, contador) do
-    [_ | t] = headers_string
-    parse_headers(t, contador + 1 )
+  def parse_headers([_ | t], contador) do
+    parse_headers(t, contador + 1)
   end
 end
