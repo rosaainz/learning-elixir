@@ -1,5 +1,5 @@
 defmodule Traefik.Conn do
-  defstruct method: "",
+ defstruct method: "",
             path: "",
             status: nil,
             response: "",
