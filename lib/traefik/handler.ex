@@ -1,5 +1,5 @@
 defmodule Traefik.Handler do
-   @moduledoc """
+@moduledoc """
   Handles the request in Traefik WebServer in a simple way.
   """
 
@@ -10,7 +10,7 @@ defmodule Traefik.Handler do
 
   alias Traefik.Conn
 
-  #Comment
+  # Comment
 
   @doc "Transforms the request into a response when it's used."
   def handle(request) do
@@ -22,7 +22,7 @@ defmodule Traefik.Handler do
     |> track()
     |> format_response()
   end
-
+  
    def route(%Conn{} = conn) do
     route(conn, conn.method, conn.path)
   end
@@ -185,4 +185,3 @@ name=Juan&lastname=Reyes&email=juan@makingdevs.com
 
 response = Traefik.Handler.handle(request)
 IO.puts(response)
-
